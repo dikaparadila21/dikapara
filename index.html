@@ -25,6 +25,7 @@
 
         <div class="camera-actions">
           <button id="btnStart" class="btn btn-primary">Aktifkan Kamera</button>
+          <button id="btnStop" class="btn btn-danger" disabled>Matikan Kamera</button>
           <button id="btnCapture" class="btn btn-secondary" disabled>Ambil Foto</button>
           <button id="btnSubmit" class="btn btn-success" disabled>Absen Masuk</button>
         </div>
@@ -39,6 +40,28 @@
         <div class="photo-card">
           <div class="photo-label">Foto Wajah</div>
           <img id="photoPreview" alt="Preview Foto" />
+        </div>
+      </section>
+
+      <section class="attendance-log">
+        <div class="attendance-header">
+          <h2>Daftar Absensi Terakhir</h2>
+          <p>Hasil absensi tersimpan di browser dan dikirim ke spreadsheet.</p>
+        </div>
+        <div class="attendance-table-wrap">
+          <table class="attendance-table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Tanggal</th>
+                <th>Jam</th>
+                <th>Foto</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceRows">
+              <tr><td colspan="4" class="empty-state">Belum ada data absensi</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 

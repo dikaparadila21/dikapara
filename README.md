@@ -312,8 +312,10 @@ Berkas frontend statis telah dibuat di root:
 3. Buka Google Apps Script (`Extensions > Apps Script`).
 4. Tempelkan isi `google-apps-script.gs`.
 5. Ganti `SPREADSHEET_ID` dengan ID spreadsheet Anda.
-6. Deploy sebagai web app "Anyone, even anonymous".
-7. Ganti `SCRIPT_URL` di `app.js` dengan URL web app.
+6. Deploy sebagai web app dengan akses: "Anyone, even anonymous".
+7. Salin URL web app dan tempelkan di `const SCRIPT_URL` di `app.js`.
+
+> Jika browser menolak permintaan karena CORS, `app.js` sudah menggunakan `mode: 'no-cors'` untuk memastikan data tetap dikirim.
 
 ### Data yang terkirim ke Spreadsheet
 - `Nama`

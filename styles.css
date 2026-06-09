@@ -146,6 +146,11 @@ input[type="text"]:focus {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.btn-danger {
+  background: linear-gradient(135deg, #dc2626, #f97316);
+  color: #fff;
+}
+
 .btn-success {
   background: linear-gradient(135deg, #16a34a, #22c55e);
   color: #fff;
@@ -187,6 +192,72 @@ input[type="text"]:focus {
   border-radius: 999px;
   font-size: 0.9rem;
   letter-spacing: 0.02em;
+}
+
+.attendance-log {
+  margin-top: 24px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: rgba(255,255,255,0.04);
+}
+
+.attendance-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.attendance-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.attendance-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.attendance-table-wrap {
+  overflow-x: auto;
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.attendance-table th {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.attendance-table td {
+  color: #d6f6f0;
+}
+
+.attendance-table img {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--muted);
+  padding: 24px 0;
 }
 
 .info-panel {
