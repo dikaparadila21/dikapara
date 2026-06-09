@@ -156,11 +156,28 @@ CREATE TABLE notifications (
    - `Dashboard Laporan`
    - `Manajemen Pengguna`
 
-### D. Jalankan backend
+### D. Jalankan backend Python (opsional)
 
 ```bash
 uvicorn backend.app:app --reload
 ```
+
+### E. Jalankan backend Node.js untuk database lokal SQLite
+
+1. Install dependency:
+   ```bash
+   npm install
+   ```
+2. Jalankan server:
+   ```bash
+   npm start
+   ```
+3. Buka browser ke:
+   ```bash
+   http://localhost:3000
+   ```
+
+> Server akan membuat file database `attendance.db` otomatis dan menyimpan data absensi ke SQLite.
 
 ## 5. Logic Face Matching yang Akurat
 

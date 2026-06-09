@@ -11,7 +11,7 @@ const jamLabel = document.getElementById('jam');
 const attendanceRows = document.getElementById('attendanceRows');
 const toast = document.getElementById('toast');
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx.../exec';
+const SCRIPT_URL = '/attendance';
 const STORAGE_KEY = 'absensi-wajah-log';
 let stream = null;
 let capturedPhoto = '';
@@ -136,11 +136,18 @@ async function submitAttendance() {
   };
 
   try {
-    await fetch(SCRIPT_URL, {
+    const response = await fetch(SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(payload)
     });
+
+    const result = await response.json();
+    if (result.status !== 'success') {
+      throw new Error(result.message || 'Gagal menyimpan data.');
+    }
 
     const record = { nama, tanggal, jam, foto: capturedPhoto };
     saveAttendanceRecord(record);
@@ -152,7 +159,7 @@ async function submitAttendance() {
     photoPreview.src = '';
   } catch (error) {
     console.error(error);
-    showToast('Gagal mengirim data. Cek URL Google Apps Script.');
+    showToast('Gagal mengirim data. Cek koneksi atau server.');
   }
 }
 
