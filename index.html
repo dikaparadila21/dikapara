@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Absensi Wajah SMA Negeri 1 Sukoharjo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <section class="hero-card">
+      <div class="hero-header">
+        <div>
+          <p class="eyebrow">Sistem Absensi Wajah</p>
+          <h1>Absensi Modern</h1>
+          <p class="subtitle">Catat kehadiran dengan cepat, aman, dan bergaya hitam klasik.</p>
+        </div>
+        <div class="status-pill" id="status-pill">Ready</div>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Nama Mahasiswa</label>
+        <input type="text" id="name" placeholder="Masukkan nama lengkap" autocomplete="off" />
+      </div>
+
+      <div class="camera-panel">
+        <div class="preview-card">
+          <div class="preview-label">Preview Kamera</div>
+          <video id="video" autoplay playsinline></video>
+          <canvas id="snapshot" class="snapshot"></canvas>
+          <div class="camera-actions">
+            <button id="start-camera" class="btn btn-secondary">Aktifkan Kamera</button>
+            <button id="capture-photo" class="btn btn-primary" disabled>Ambil Foto</button>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-label">Foto Tersimpan</div>
+          <div class="photo-frame" id="photo-frame">
+            <span class="photo-empty">Belum ada foto</span>
+          </div>
+          <div class="attendance-actions">
+            <button id="submit-attendance" class="btn btn-accent" disabled>Absen Masuk</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="notification-box" id="notification">Silakan aktifkan kamera dan isi nama.</div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
