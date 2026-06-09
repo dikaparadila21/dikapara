@@ -7,48 +7,57 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="container">
-    <section class="hero-card">
-      <div class="hero-header">
-        <div>
-          <p class="eyebrow">Sistem Absensi Wajah</p>
-          <h1>Absensi Modern</h1>
-          <p class="subtitle">Catat kehadiran dengan cepat, aman, dan bergaya hitam klasik.</p>
+  <div class="page-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">ABSENSI WAJAH</p>
+        <h1>SMA Negeri 1 Sukoharjo</h1>
+      </div>
+    </header>
+
+    <main class="card">
+      <section class="form-block">
+        <label for="nama">Nama Mahasiswa</label>
+        <input type="text" id="nama" placeholder="Masukkan nama lengkap" autocomplete="off" />
+
+        <div class="camera-actions">
+          <button id="btnStart" class="btn btn-primary">Aktifkan Kamera</button>
+          <button id="btnCapture" class="btn btn-secondary" disabled>Ambil Foto</button>
+          <button id="btnSubmit" class="btn btn-success" disabled>Absen Masuk</button>
         </div>
-        <div class="status-pill" id="status-pill">Ready</div>
-      </div>
+      </section>
 
-      <div class="form-group">
-        <label for="name">Nama Mahasiswa</label>
-        <input type="text" id="name" placeholder="Masukkan nama lengkap" autocomplete="off" />
-      </div>
+      <section class="preview-block">
+        <div class="video-card">
+          <video id="video" autoplay muted playsinline></video>
+          <div class="video-label">Preview Kamera</div>
+        </div>
 
-      <div class="camera-panel">
-        <div class="preview-card">
-          <div class="preview-label">Preview Kamera</div>
-          <video id="video" autoplay playsinline></video>
-          <canvas id="snapshot" class="snapshot"></canvas>
-          <div class="camera-actions">
-            <button id="start-camera" class="btn btn-secondary">Aktifkan Kamera</button>
-            <button id="capture-photo" class="btn btn-primary" disabled>Ambil Foto</button>
+        <div class="photo-card">
+          <div class="photo-label">Foto Wajah</div>
+          <img id="photoPreview" alt="Preview Foto" />
+        </div>
+      </section>
+
+      <section class="info-panel">
+        <div class="info-grid">
+          <div>
+            <span>Tanggal</span>
+            <strong id="tanggal">-</strong>
+          </div>
+          <div>
+            <span>Jam</span>
+            <strong id="jam">-</strong>
           </div>
         </div>
+        <div class="hint">Data akan dikirim ke Google Spreadsheet melalui Google Apps Script.</div>
+      </section>
+    </main>
 
-        <div class="summary-card">
-          <div class="summary-label">Foto Tersimpan</div>
-          <div class="photo-frame" id="photo-frame">
-            <span class="photo-empty">Belum ada foto</span>
-          </div>
-          <div class="attendance-actions">
-            <button id="submit-attendance" class="btn btn-accent" disabled>Absen Masuk</button>
-          </div>
-        </div>
-      </div>
+    <div id="toast" class="toast"></div>
+  </div>
 
-      <div class="notification-box" id="notification">Silakan aktifkan kamera dan isi nama.</div>
-    </section>
-  </main>
-
+  <canvas id="captureCanvas" hidden></canvas>
   <script src="app.js"></script>
 </body>
 </html>

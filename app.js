@@ -1,91 +1,89 @@
 const video = document.getElementById('video');
-const snapshot = document.getElementById('snapshot');
-const startCameraButton = document.getElementById('start-camera');
-const captureButton = document.getElementById('capture-photo');
-const submitButton = document.getElementById('submit-attendance');
-const notification = document.getElementById('notification');
-const statusPill = document.getElementById('status-pill');
-const photoFrame = document.getElementById('photo-frame');
-const nameInput = document.getElementById('name');
+const btnStart = document.getElementById('btnStart');
+const btnCapture = document.getElementById('btnCapture');
+const btnSubmit = document.getElementById('btnSubmit');
+const photoPreview = document.getElementById('photoPreview');
+const captureCanvas = document.getElementById('captureCanvas');
+const namaInput = document.getElementById('nama');
+const tanggalLabel = document.getElementById('tanggal');
+const jamLabel = document.getElementById('jam');
+const toast = document.getElementById('toast');
 
-let currentPhoto = '';
-let cameraStream = null;
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx.../exec';
+let stream = null;
+let capturedPhoto = '';
 
-const GAS_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add('show');
+  window.setTimeout(() => toast.classList.remove('show'), 3200);
+}
 
-function updateStatus(message, success = true) {
-  notification.textContent = message;
-  notification.style.color = success ? 'var(--text)' : 'var(--danger)';
-  statusPill.textContent = success ? 'Ready' : 'Error';
-  if (!success) {
-    statusPill.style.color = 'var(--danger)';
-  } else {
-    statusPill.style.color = 'var(--accent)';
-  }
+function updateDateTime() {
+  const now = new Date();
+  tanggalLabel.textContent = now.toLocaleDateString('id-ID', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+  jamLabel.textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
 async function startCamera() {
   try {
-    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-    video.srcObject = cameraStream;
-    captureButton.disabled = false;
-    updateStatus('Kamera aktif. Siap untuk mengambil foto.');
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+    video.srcObject = stream;
+    btnCapture.disabled = false;
+    btnStart.textContent = 'Kamera Aktif';
+    btnStart.classList.add('active');
+    showToast('Kamera berhasil diaktifkan');
   } catch (error) {
-    updateStatus('Tidak dapat mengakses kamera. Periksa izin dan coba lagi.', false);
-    console.error('Error startCamera:', error);
+    showToast('Gagal mengaktifkan kamera. Izinkan akses kamera.');
   }
 }
 
 function capturePhoto() {
-  const context = snapshot.getContext('2d');
-  snapshot.width = video.videoWidth;
-  snapshot.height = video.videoHeight;
-  context.drawImage(video, 0, 0, snapshot.width, snapshot.height);
+  if (!stream) {
+    showToast('Aktifkan kamera terlebih dahulu.');
+    return;
+  }
 
-  const dataUrl = snapshot.toDataURL('image/jpeg', 0.92);
-  currentPhoto = dataUrl;
+  const width = video.videoWidth;
+  const height = video.videoHeight;
 
-  snapshot.style.display = 'block';
-  video.style.display = 'none';
-  photoFrame.innerHTML = `<img src="${dataUrl}" alt="Foto Wajah" />`;
-  submitButton.disabled = false;
-  updateStatus('Foto berhasil diambil. Silakan klik Absen Masuk.');
-}
+  captureCanvas.width = width;
+  captureCanvas.height = height;
+  const ctx = captureCanvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, width, height);
 
-function getFormattedDateTime() {
-  const now = new Date();
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  const date = now.toLocaleDateString('id-ID', options);
-  const time = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  return { date, time };
+  capturedPhoto = captureCanvas.toDataURL('image/jpeg', 0.85);
+  photoPreview.src = capturedPhoto;
+  btnSubmit.disabled = false;
+  showToast('Foto berhasil diambil');
 }
 
 async function submitAttendance() {
-  const nama = nameInput.value.trim();
-
+  const nama = namaInput.value.trim();
   if (!nama) {
-    updateStatus('Isi nama mahasiswa terlebih dahulu.', false);
+    showToast('Masukkan nama terlebih dahulu');
+    return;
+  }
+  if (!capturedPhoto) {
+    showToast('Ambil foto wajah terlebih dahulu');
     return;
   }
 
-  if (!currentPhoto) {
-    updateStatus('Ambil foto wajah terlebih dahulu.', false);
-    return;
-  }
+  const now = new Date();
+  const tanggal = now.toLocaleDateString('id-ID');
+  const jam = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-  const { date, time } = getFormattedDateTime();
   const payload = {
     nama,
-    tanggal: date,
-    jam: time,
-    foto: currentPhoto
+    tanggal,
+    jam,
+    foto: capturedPhoto
   };
 
   try {
-    updateStatus('Mengirim data absensi...', true);
-    submitButton.disabled = true;
-
-    const response = await fetch(GAS_URL, {
+    const response = await fetch(SCRIPT_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -93,31 +91,25 @@ async function submitAttendance() {
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok) {
-      throw new Error(`Server error ${response.status}`);
-    }
-
     const result = await response.json();
-    if (result.success === false) {
+    if (response.ok && result.status === 'success') {
+      showToast('Absensi berhasil');
+      btnSubmit.disabled = true;
+      namaInput.value = '';
+      capturedPhoto = '';
+      photoPreview.src = '';
+    } else {
       throw new Error(result.message || 'Gagal menyimpan data');
     }
-
-    updateStatus('Absensi berhasil. Terima kasih!', true);
-    submitButton.disabled = true;
-    captureButton.disabled = false;
   } catch (error) {
-    console.error('submitAttendance error:', error);
-    updateStatus('Gagal mengirim data. Coba lagi.', false);
-    submitButton.disabled = false;
+    console.error(error);
+    showToast('Gagal mengirim data. Cek URL Google Apps Script.');
   }
 }
 
-startCameraButton.addEventListener('click', startCamera);
-captureButton.addEventListener('click', capturePhoto);
-submitButton.addEventListener('click', submitAttendance);
+btnStart.addEventListener('click', startCamera);
+btnCapture.addEventListener('click', capturePhoto);
+btnSubmit.addEventListener('click', submitAttendance);
 
-nameInput.addEventListener('input', () => {
-  if (nameInput.value.trim() && currentPhoto) {
-    submitButton.disabled = false;
-  }
-});
+updateDateTime();
+setInterval(updateDateTime, 1000);

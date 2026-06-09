@@ -298,6 +298,32 @@ def find_best_match(db: Session, candidate_encoding: np.ndarray, threshold: floa
         return best.student_id, float(best_distance)
     return None, best_distance
 
+## 7. Website Absensi Wajah (HTML/CSS/JS)
+
+Berkas frontend statis telah dibuat di root:
+- `index.html`
+- `styles.css`
+- `app.js`
+- `google-apps-script.gs`
+
+### Cara deploy Google Apps Script
+1. Buat Google Spreadsheet baru.
+2. Salin `SPREADSHEET_ID` dari URL spreadsheet.
+3. Buka Google Apps Script (`Extensions > Apps Script`).
+4. Tempelkan isi `google-apps-script.gs`.
+5. Ganti `SPREADSHEET_ID` dengan ID spreadsheet Anda.
+6. Deploy sebagai web app "Anyone, even anonymous".
+7. Ganti `SCRIPT_URL` di `app.js` dengan URL web app.
+
+### Data yang terkirim ke Spreadsheet
+- `Nama`
+- `Tanggal`
+- `Jam`
+- `Foto Base64`
+
+> Pastikan browser memberikan izin kamera dan web app telah ditempatkan di URL yang valid.
+
+
 @app.post('/students/register')
 async def register_student(
     nisn: str,
