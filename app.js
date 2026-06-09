@@ -31,11 +31,15 @@ async function startCamera() {
   try {
     stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
     video.srcObject = stream;
+    video.muted = true;
+    video.playsInline = true;
+    await video.play();
     btnCapture.disabled = false;
     btnStart.textContent = 'Kamera Aktif';
     btnStart.classList.add('active');
     showToast('Kamera berhasil diaktifkan');
   } catch (error) {
+    console.error(error);
     showToast('Gagal mengaktifkan kamera. Izinkan akses kamera.');
   }
 }
